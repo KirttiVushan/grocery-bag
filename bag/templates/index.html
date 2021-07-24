@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>View List</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        {%load static%}
+        <link rel="stylesheet" href="{% static 'functions/css/style.css' %}">
+    </head>
+    <body>
+    <nav class="navbar navbar-light bg-light">
+        <span class="navbar-brand mb-0 h1">Grocery Bag</span>
+       
+            <form class="form-inline" action="{% url 'bag:logOut' %}" method="POST">
+             <h5 class="my-2 mr-sm-4">{{user.username}}</h5>
+            {% csrf_token %}
+            <button class="btn btn-sm btn-outline-secondary" type="submit">Logout</button>
+            </form>
+    </nav>
+        <div class="container mt-5">
+            <!-- top -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <h1>View Grocery List</h1>
+                </div>
+                <div class="col-lg-6 float-right">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <!-- Date Filtering-->
+                            <form method="POST"> 
+                            <input type="date" class="form-control" name="date" id="date" value="{{date_filter}}">
+                        </div>
+                        <div class="col-lg-4">
+                        {% csrf_token %}
+                            <input type="submit" class="btn btn-danger" value="filter">
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div>
+               <a href="{% url 'bag:add' %}" >Add Item</a>        
+            </div>
+            <!-- // top -->
+            <!-- Grocery Cards -->
+            <div class="row mt-4">
+                <!--- -->
+                <!-- Loop This -->
+                {% for item in groceries %}
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">{{item.name}}</h5>
+                          <h6 class="card-subtitle mb-2 text-muted">{{item.quantity}}</h6>
+                          {% if item.get_status_display == 'BOUGHT' %}
+                            <p class="text-success">{{item.get_status_display}}</p>
+                          {% endif %}
+                          {% if item.get_status_display == 'NOT AVAILABLE' %}
+                            <p class="text-danger">{{item.get_status_display}}</p>
+                          {% endif %}
+                          {% if item.get_status_display == 'PENDING' %}
+                            <p class="text-primary">{{item.get_status_display}}</p>
+                          {% endif %}
+                          
+                          <p><a href="{% url 'bag:update' item.id %}"><button id="update" class="btn btn-outline-primary">Update</button></a></p>
+                          <form method="POST" action="{% url 'bag:delete' item.id %}">
+                          {% csrf_token %}
+                          
+                          <div class="button_action"><button style="float:right;margin-top:-55px;" id="delete" data-toggle="modal" data-target="#exampleModal" class="btn btn-outline-primary" type="submit">Delete</button></div>
+                          </form>
+
+                        </div>
+                      </div>
+                </div>
+                {% endfor %}
+                <!-- // Loop -->
+
+            </div>
+        </div>
+    </body>
+</html>
