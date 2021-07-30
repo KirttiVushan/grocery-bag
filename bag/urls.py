@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from . import views
 
 
@@ -10,5 +10,6 @@ urlpatterns = [
     path('add/', views.add, name='add'),
     path('update/<int:item_pk>', views.update, name='update'),
     path('delete/<int:item_pk>', views.delete_item, name='delete'),
-    path('logout/',views.logOut, name="logOut")
+    path('logout/',views.logOut, name="logOut"),
+    path('api/', include('bag.api.urls')),
 ]
